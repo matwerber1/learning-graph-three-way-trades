@@ -36,13 +36,13 @@ Now, two-way swaps are pretty easy to solve in a relational database. Imagine yo
 **garage** table represents available parking locations and related metadata:
 
 ```
-+-----------+---------------+--------------------+
-| garage_id |    address    | is_covered_parking |
-+-----------+---------------+--------------------+
-|         1 | 123 Main st   | true               |
-|         2 | 456 SW Union  | false              |
-|         3 | 789 Greenlake | false              |
-+-----------+---------------+--------------------+
++----------------+---------------+--------------------+
+| garage_id (PK) |    address    | is_covered_parking |
++----------------+---------------+--------------------+
+|              1 | 123 Main st   | true               |
+|              2 | 456 SW Union  | false              |
+|              3 | 789 Greenlake | false              |
++----------------+---------------+--------------------+
 ```
 
 ### Users table
@@ -50,12 +50,12 @@ Now, two-way swaps are pretty easy to solve in a relational database. Imagine yo
 **user** table is your "customer" primary table. Each customer has one, and only one, `current_garage_id` where they currently park: 
 
 ```
-+-------------+--------+-------------------+
-| user_id(PK) |  name  | current_garage_id |
-+-------------+--------+-------------------+
-|           1 | Mathew |                 1 |
-|           2 | Jane   |                 1 |
-+-------------+--------+-------------------+
++-------------+--------+------------------------+
+| user_id(PK) |  name  | current_garage_id (FK) |
++-------------+--------+------------------------+
+|           1 | Mathew |                      1 |
+|           2 | Jane   |                      1 |
++-------------+--------+------------------------+
 ```
 
 ### Trade table
@@ -63,13 +63,13 @@ Now, two-way swaps are pretty easy to solve in a relational database. Imagine yo
 **trade** contains a one-to-many relationship of which garage(s) a given user would be willing to trade for:
 
 ```
-+-----------+-------------------+
-|  user_id  | desired_garage_id |
-+-----------+-------------------+
-| 1         | Garage_2          |
-| 2         | Garage_1          |
-| 2         | Garage_3          |
-+-----------+-------------------+
++-----------+-----------------------------+
+|  user_id (FK)  | desired_garage_id (FK) |
++----------------+------------------------+
+| 1              | Garage_2               |
+| 2              | Garage_1               |
+| 2              | Garage_3               |
++----------------+------------------------+
 ```
 
 Above, we can see that User 1 (Mathew) has Garage 1 and would be willing to trade for Garage 2. We also see that user 2 (Jane) has Garage 2 and would be willing to trade for either Garage 1 or 2. 

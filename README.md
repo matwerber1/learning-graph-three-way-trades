@@ -23,9 +23,9 @@ Now, once you get a spot, the next challenge is that it is not uncommon for team
 
 Today, this issue is solved by an email distribution list where folks can advertise what parking spot they have and what spot they would be willing to trade for. 
 
-While it works, I'm left thinking, there must be a better way!
+While it works, I'm left thinking, there must be a better way! It would be fairly easy to build a web app where users can enter this information and get automatically notified when valid swap opportunities appear. The only challenge is figuring out what database type, data model, and queries we need to identify our trade opportunities. 
 
-It would be fairly easy to build a web app where users can enter this information and get automatically notified when valid swap opportunities appear. 
+This project will walk you through my reasoning of relational vs. graph, why I chose a graph, and how I solved for it. 
 
 ## Relational solution
 

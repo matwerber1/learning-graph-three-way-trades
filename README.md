@@ -29,7 +29,7 @@ This project will walk you through my reasoning of relational vs. graph, why I c
 
 ## Relational solution
 
-Now, two-way swaps are very easy to solve in a relational database. Imagine your tables looks like this: 
+Now, two-way swaps are pretty easy to solve in a relational database. Imagine your tables looks like this: 
 
 ### Garage table
 

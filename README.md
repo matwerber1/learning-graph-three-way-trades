@@ -217,10 +217,10 @@ g.V().hasLabel("person").has("name", "Jane").as("StartingPerson")
         .in("wants_to_park_in")     // Move in to a person that wants that garage
         .simplePath()
     )
-    .until(loops().is(eq(1)))
-    .out("parks_in")
-    .in("wants_to_park_in")
-        .has("name", "Jane")
+    .until(loops().is(eq(1)))       // Above, we've moved to a(the) person(s) that wants to park in Jane's garage
+    .out("parks_in")                // From each of those people, we move out to the garage they park in
+    .in("wants_to_park_in")         // Then we move to the people that want *that* garage
+        .has("name", "Jane")        // and finally, we filter results to only include garages that our original person, Jane, also wants to park in
     .path()
         .by(values())
 ```

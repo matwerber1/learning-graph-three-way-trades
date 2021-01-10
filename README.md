@@ -256,8 +256,6 @@ So, instead, we add our final `.in().out()` pair **after** the loop is done. I w
 Update: I've learned some new tricks from chapter 8 & 9 in **The Practitioner's Guide to Graph Data**, and am now able to improve the first answer, above. Rather than replace my original solution above, I'll Show the new answer, below:
 
 ```
-%%gremlin
-
 1 g.V().hasLabel("person").has("name", "Jane").as("StartingPerson")
 2     .repeat(
 3         out("parks_in")                                 // Move out to a garage they want

@@ -198,7 +198,9 @@ Query results are:
 
 If you look at the results, you can see that our traversal path traces the same circle ("cycle", in graph terms) that we outlined above. 
 
-### Graph query for a three-way trade 
+### Graph query for a three-way trade (Version 1)
+
+**Edit**: See the "Version 2" answer further below for a better approach.
 
 Now, if we wanted to instead look for three-way trade opportunities, we could add additional `in().out()` steps as needed. 
 
@@ -249,7 +251,7 @@ Well, the reason is that we have `.simplePath()` inside our `repeat()`. This mak
 
 So, instead, we add our final `.in().out()` pair **after** the loop is done. I wouldn't be surprised if there's a better way to do this... and if you know of one, please share!
 
-## Improving our graph query
+### Graph query for a three-way trade (Version 2 - improved)
 
 Update: I've learned some new tricks from chapter 8 & 9 in **The Practitioner's Guide to Graph Data**, and am now able to improve the first answer, above. Rather than replace my original solution above, I'll Show the new answer, below:
 
@@ -282,7 +284,7 @@ Results:
 2	{'path': path[Jane, Garage 2, Mathew, Garage 1, John, Garage 3, Jane], 'Number of people in the trade': 3.0}
 ```
 
-Lines 1 through 5 are almost the same as before. We move `out()` from our starting person, Jane, to the garage she wants, then we move `in()` to person(s) that have that garage. The biggest difference is that I removed `simplePath()` because I **do** want to find cycles that start and end on the same person. The reason I thought I had to use it is that I thought leaving it out might lead to infinite loops... but I realized that `.loops().is(eq(3))` on line 9 should prevent that. Of course, on this small sample data set, that wouldn't be a problem - but I want to think within the context of production. 
+Lines 1 through 5 are almost the same as before. We move `out()` from our starting person, Jane, to the garage she wants, then we move `in()` to person(s) that have that garage. The biggest difference is that I removed `simplePath()` because I **do** want to find cycles that start and end on the same person. The reason I originally thought I needed `simplePath()` was because I thought I ran the risk of infinite loops... but I realized that `or().loops().is(eq(3))` on line 9 should prevent that.
 
 The next change is that line 7, `where("CurrentPerson", eq("StartingPerson"))` will end our loop if our current person in the loop is the same as our starting person, meaning we've found a trade opportunity. This line makes use of the `StartingPerson` and `CurrentPerson` labels we defined with `as()` on 1 and 4.
 

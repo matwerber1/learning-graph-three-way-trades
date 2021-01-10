@@ -211,7 +211,7 @@ and, there is. We can implement `do...while` logic using gremlin's `repeat().unt
 Let's repeat our two-way swap query, but this time using a loop:
 
 ```
-g.V().hasLabel("person").has("name", "Jane").as("StartingPerson")
+g.V().hasLabel("person").has("name", "Jane")
     .repeat(
         out("parks_in")             // Move out to a garage they want
         .in("wants_to_park_in")     // Move in to a person that wants that garage
@@ -248,3 +248,50 @@ You might be wondering - Why do I have a repetitive `.out("parks_in").in("wants_
 Well, the reason is that we have `.simplePath()` inside our `repeat()`. This makes sure that a loop only returns paths that do not traverse the same vertex more than once. For a small sample data set like this, its not a big deal... but in production, not forcing a simple path could have a big impact on processing time. 
 
 So, instead, we add our final `.in().out()` pair **after** the loop is done. I wouldn't be surprised if there's a better way to do this... and if you know of one, please share!
+
+## Improving our graph query
+
+I'm learning new tricks as I continue to read Gremlin (thank you Chapter 8 & 9 in **The Practitioner's Guide to Graph Data**!!). Rather than replace my original solution above, I'll Show the new answer, below:
+
+```
+%%gremlin
+
+1 g.V().hasLabel("person").has("name", "Jane").as("StartingPerson")
+2     .repeat(
+3         out("parks_in")                                 // Move out to a garage they want
+4         .in("wants_to_park_in").as("CurrentPerson")     // Move in to a person that wants that garage
+5     )
+6     .until(
+7         where("CurrentPerson", eq("StartingPerson"))    // Either we've found a match...
+8         .or()                                           // or, we've gone as far as we're willing to go
+9        .loops().is(eq(3))                              
+10    )
+11    .where(eq("StartingPerson"))                        // Make sure we completed a cycle back to starting person
+12    .limit(5)
+13    .project("path", "Number of trades")                // Shape our output
+14        .by(path().by(values()))                        // Show the people and garages in the trade
+15        .by(
+16            path().count(local).math('(_ - 1) / 2')
+17       )
+```
+
+Results: 
+
+```
+1	{'path': path[Jane, Garage 2, John, Garage 3, Jane], 'Number of people in the trade': 2.0}
+2	{'path': path[Jane, Garage 2, Mathew, Garage 1, John, Garage 3, Jane], 'Number of people in the trade': 3.0}
+```
+
+Lines 1 through 5 are almost the same as before. We move `out()` from our starting person, Jane, to the garage she wants, then we move `in()` to person(s) that have that garage. The biggest difference is that I removed `simplePath()` because I **do** want to find cycles that start and end on the same person. The reason I thought I had to use it is that I thought leaving it out might lead to infinite loops... but I realized that `.loops().is(eq(3))` on line 9 should prevent that. Of course, on this small sample data set, that wouldn't be a problem - but I want to think within the context of production. 
+
+The next change is that line 7, `where("CurrentPerson", eq("StartingPerson"))` will end our loop if our current person in the loop is the same as our starting person, meaning we've found a trade opportunity. This line makes use of the `StartingPerson` and `CurrentPerson` labels we defined with `as()` on 1 and 4.
+
+Notice the use of `or()` on line 8. Here, I'm saying that a traversal is finished at the earlier of finding a trade opportunity *or* having completed three loops. This is done because (a), our starting person might not have any trade opportunities and (b) in a large, production data set, I only want to look for shorter-distance (nearby neighborhoods) trade opportunities. 
+
+On line 9, the `3` in `.loops().is(eq(3))` means that, at most, I want to find 2 and 3-way trade opportunities. If I wanted to search for everything up to 4-way trades, I could simply increase this value to 4. 
+
+Because our loop could end simply because 3 loops have been created rather than the fact that we've actually found a trade opportunity, the `where()` step on line 11 makes sure that any such paths are filtered out of our result set. 
+
+The `limit(5)` on Line 12 just means return the first five paths that we find. 
+
+Lines 13 through 16 are just used to format our output. 

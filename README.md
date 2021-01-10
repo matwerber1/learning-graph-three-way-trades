@@ -251,7 +251,7 @@ So, instead, we add our final `.in().out()` pair **after** the loop is done. I w
 
 ## Improving our graph query
 
-I'm learning new tricks as I continue to read Gremlin (thank you Chapter 8 & 9 in **The Practitioner's Guide to Graph Data**!!). Rather than replace my original solution above, I'll Show the new answer, below:
+Update: I've learned some new tricks from chapter 8 & 9 in **The Practitioner's Guide to Graph Data**, and am now able to improve the first answer, above. Rather than replace my original solution above, I'll Show the new answer, below:
 
 ```
 %%gremlin

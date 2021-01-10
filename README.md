@@ -1,4 +1,4 @@
-# Learning Graph - Three Way Trades
+# Learning Gremlin - Three Way Trades
 
 This project documents my early exploration into learning Graph database design and querying via Gremlin. I will walk through a real-world problem I want to solve and how I arrived at the answer. 
 

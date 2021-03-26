@@ -60,7 +60,7 @@ Now, two-way swaps are pretty easy to solve in a relational database. Imagine yo
 
 ### Trade table
 
-**trade** contains a one-to-many relationship of which garage(s) a given user would be willing to trade for:
+**trade** contains a many-to-many relationship of which garage(s) a given user would be willing to trade for:
 
 ```
 +-----------+-----------------------------+

@@ -72,7 +72,7 @@ Now, two-way swaps are pretty easy to solve in a relational database. Imagine yo
 +----------------+------------------------+
 ```
 
-Above, we can see that User 1 (Mathew) has Garage 1 and would be willing to trade for Garage 2. We also see that user 2 (Jane) has Garage 2 and would be willing to trade for either Garage 1 or 2. 
+Above, we can see that User 1 (Mathew) has Garage 1 and would be willing to trade for Garage 2. We also see that user 2 (Jane) has Garage 2 and would be willing to trade for either Garage 1 or 3. 
 
 Let's write some SQL to find these swap opportunities!
 
